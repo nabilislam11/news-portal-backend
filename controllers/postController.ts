@@ -249,7 +249,6 @@ export const getPostById = asyncHandler(async (req: Request, res: Response) => {
 });
 
 // 5. Get All Posts (AND Get Posts by Category)
-// Supports: ?category=ID OR ?category=slug-name
 export const getAllPosts = asyncHandler(async (req: Request, res: Response) => {
   const page = parseInt(req.query.page as string) || 1;
   const limit = parseInt(req.query.limit as string) || 10;
@@ -297,8 +296,7 @@ export const getAllPosts = asyncHandler(async (req: Request, res: Response) => {
   });
 });
 
-// 6. Search Posts (Global Search Bar)
-// Searches Title + Category Name (Optional)
+// 6. Search Posts (Optimized with $text index)
 export const searchPosts = asyncHandler(async (req: Request, res: Response) => {
   const { query, categoryName } = req.query;
   const page = parseInt(req.query.page as string) || 1;
@@ -307,11 +305,12 @@ export const searchPosts = asyncHandler(async (req: Request, res: Response) => {
 
   const searchFilter: any = { isDraft: false };
 
+  // A. TEXT SEARCH (Uses Index - Fast)
   if (query) {
-    const safeQuery = escapeRegex(query as string);
-    searchFilter.title = { $regex: safeQuery, $options: "i" };
+    searchFilter.$text = { $search: query as string };
   }
 
+  // B. CATEGORY FILTER (Uses Regex - Safe for small collections)
   if (categoryName) {
     const safeCat = escapeRegex(categoryName as string);
     const category = await Category.findOne({
@@ -328,12 +327,18 @@ export const searchPosts = asyncHandler(async (req: Request, res: Response) => {
     }
   }
 
-  const posts = await Post.find(searchFilter)
-    .sort({ createdAt: -1 })
-    .skip(skip)
-    .limit(limit)
-    .populate("category", "name slug")
-    .populate("tags", "name");
+  // C. Sorting Strategy
+  let postsQuery = Post.find(searchFilter);
+
+  if (query) {
+    // Relevance Sort if searching by text
+    postsQuery = postsQuery.select({ score: { $meta: "textScore" } }).sort({ score: { $meta: "textScore" } });
+  } else {
+    // Date Sort if just filtering by category
+    postsQuery = postsQuery.sort({ createdAt: -1 });
+  }
+
+  const posts = await postsQuery.skip(skip).limit(limit).populate("category", "name slug").populate("tags", "name");
 
   const total = await Post.countDocuments(searchFilter);
   res.status(200).json({
@@ -389,33 +394,52 @@ export const getTrendingPosts = asyncHandler(async (req: Request, res: Response)
   res.status(200).json({ success: true, data: trendingStats });
 });
 
-// 8. Get Posts By Category (Dedicated Route)
-// Usage: GET /api/posts/category/:slugOrId
-export const getPostsByCategory = asyncHandler(async (req: Request, res: Response) => {
-  const { slugOrId } = req.params; // We expect the route to be /category/:slugOrId
+// 8. Get Posts by Filter (Smart Endpoint: All / Category / Tag)
+// Route: GET /api/posts/filter/:id
+// Features: Auto-detects Category vs Tag, handles "all", Pagination enabled.
+export const getPostsByFilter = asyncHandler(async (req: Request, res: Response) => {
+  const { id } = req.params;
   const page = parseInt(req.query.page as string) || 1;
   const limit = parseInt(req.query.limit as string) || 10;
   const skip = (page - 1) * limit;
 
-  let categoryId: any;
+  // 1. Initialize Default Filter (Show all public posts)
+  let filter: any = { isDraft: false };
+  let filterType = "all";
+  let filterName = "All Posts";
 
-  // 1. Determine if input is an ID or a Slug
-  if (Types.ObjectId.isValid(slugOrId)) {
-    // It's a valid ObjectId, assume it's an ID
-    categoryId = slugOrId;
+  // 2. Logic Handler
+  if (id === "all") {
+    // Keep defaults (returns all posts)
   } else {
-    // It's a Slug (e.g., "international-news")
-    const category = await Category.findOne({ slug: slugOrId });
-    if (!category) {
-      throw createError("Category not found", 404);
+    // Validate MongoDB ID format
+    if (!Types.ObjectId.isValid(id)) {
+      throw createError("Invalid ID format. Must be a valid MongoDB ObjectId or 'all'.", 400);
     }
-    categoryId = category._id;
+
+    // A. Check if it's a CATEGORY
+    const category = await Category.findById(id);
+
+    if (category) {
+      filter.category = category._id;
+      filterType = "category";
+      filterName = category.name;
+    } else {
+      // B. If not Category, check if it's a TAG
+      const tag = await Tag.findById(id);
+
+      if (tag) {
+        filter.tags = tag._id;
+        filterType = "tag";
+        filterName = tag.name;
+      } else {
+        // C. Neither found
+        throw createError("No Category or Tag found with this ID", 404);
+      }
+    }
   }
 
-  // 2. Fetch Posts for this Category
-  // We strictly filter by this category and usually exclude drafts for public view
-  const filter = { category: categoryId, isDraft: false };
-
+  // 3. Fetch Posts with Pagination
   const posts = await Post.find(filter)
     .sort({ createdAt: -1 })
     .skip(skip)
@@ -426,10 +450,15 @@ export const getPostsByCategory = asyncHandler(async (req: Request, res: Respons
 
   const total = await Post.countDocuments(filter);
 
+  // 4. Response with Metadata
   res.status(200).json({
     success: true,
     data: posts,
-    categoryName: slugOrId, // Helpful for frontend to know which category was fetched
+    meta: {
+      filterType, // "category", "tag", or "all"
+      filterName, // e.g., "Sports" or "Tech"
+      filterId: id,
+    },
     pagination: { total, page, limit, pages: Math.ceil(total / limit) },
   });
 });
