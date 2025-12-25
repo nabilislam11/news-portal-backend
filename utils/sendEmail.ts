@@ -1,17 +1,17 @@
 import nodemailer from "nodemailer";
 import { verificationEmailTemplate } from "../templates/verificationEmail";
 
-// FIX: Changed 'service' to 'host'
+// FIX: Switch to Port 587 (STARTTLS) to bypass Cloud Firewall blocks
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
-  port: 587, // CHANGE to 587
-  secure: false, // MUST be false for 587
+  port: 587, // Standard port for Cloud Hosting
+  secure: false, // Must be false for port 587 (it upgrades to SSL automatically)
   auth: {
     user: process.env.EMAIL_FROM_ADDRESS,
     pass: process.env.EMAIL_APP_PASSWORD,
   },
   tls: {
-    ciphers: "SSLv3", // Helps with some Google handshake issues
+    rejectUnauthorized: false, // Helps avoid some strict SSL handshake errors
   },
 });
 
