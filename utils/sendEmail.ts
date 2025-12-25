@@ -1,10 +1,9 @@
 import { Resend } from "resend";
 import { verificationEmailTemplate } from "../templates/verificationEmail";
 
-// 1. Initialize Resend with your API Key
+// 1. Initialize Resend
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-// Type for Email Templates
 type EmailTemplate = "verification" | "passwordReset";
 
 const getEmailSubject = (template: EmailTemplate) => {
@@ -32,10 +31,13 @@ export async function sendEmail(to: string, type: EmailTemplate, data: string) {
     const subject = getEmailSubject(type);
     const emailHtml = getEmailTemplate(type, data);
 
-    // 2. Send Email via HTTP API (Bypasses Render's SMTP Block)
     const response = await resend.emails.send({
-      from: "onboarding@resend.dev", // Use this for testing, or your verified domain
-      to: "bobsani8232@gmail.com",
+      // 👇 I UPDATED THIS WITH YOUR REAL DOMAIN FROM THE SCREENSHOT
+      from: "noreply@send.protidinjonotarnews.com",
+
+      // ✅ Now allowed to send to ANYONE (Real Production Mode)
+      to: to,
+
       subject: subject,
       html: emailHtml,
     });
