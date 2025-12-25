@@ -8,6 +8,7 @@ export const validateEnv = () => {
     "CLOUDINARY_CLOUD_NAME",
     "CLOUDINARY_API_KEY",
     "CLOUDINARY_API_SECRET",
+    "ADMIN_EMAIL",
     "APP_NAME",
     "BASE_URL",
     "PORT",
