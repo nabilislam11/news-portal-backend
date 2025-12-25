@@ -2,7 +2,9 @@ import nodemailer from "nodemailer";
 import { verificationEmailTemplate } from "../templates/verificationEmail";
 
 const transporter = nodemailer.createTransport({
-  service: "gmail",
+  service: "smtp.gmail.com",
+  port: 465,
+  secure: true,
   auth: {
     user: process.env.EMAIL_FROM_ADDRESS,
     pass: process.env.EMAIL_APP_PASSWORD,
