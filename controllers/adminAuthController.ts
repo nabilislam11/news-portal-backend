@@ -229,12 +229,15 @@ export const resetPassword = asyncHandler(async (req: Request, res: Response) =>
 
 // 5. LOGOUT
 export const logout = (req: Request, res: Response) => {
+  // Option 1: Clear with your specific settings (The standard way)
   res.clearCookie("accessToken", {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
+    secure: true,
     sameSite: "none",
     path: "/",
   });
+
+  res.clearCookie("accessToken");
 
   res.status(200).json({
     success: true,
