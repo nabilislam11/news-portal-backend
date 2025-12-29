@@ -116,7 +116,6 @@ export const createPost = asyncHandler(async (req: CustomRequest, res: Response)
       content,
       image: imageData,
       category,
-      // ❌ Removed subCategory logic here
       tags: tagIds,
     });
 
@@ -136,7 +135,6 @@ export const createPost = asyncHandler(async (req: CustomRequest, res: Response)
 // 2. Update Post
 export const updatePost = asyncHandler(async (req: CustomRequest, res: Response) => {
   const { postId } = req.params;
-  // ❌ Removed subCategory
   const { title, content, category, tags, addToBreaking } = req.body;
   const file = getFile(req);
 
@@ -158,8 +156,6 @@ export const updatePost = asyncHandler(async (req: CustomRequest, res: Response)
     updateData.category = category;
   }
 
-  // ❌ Removed the subCategory check block here
-
   if (tags) updateData.tags = await processTags(tags);
 
   let imageData = oldPost.image;
@@ -173,7 +169,6 @@ export const updatePost = asyncHandler(async (req: CustomRequest, res: Response)
       if (file) safeDelete(file.path);
     }
 
-    // ❌ Removed .populate("subCategory")
     const updatedPost = await Post.findByIdAndUpdate(postId, updateData, { new: true, runValidators: true })
       .populate("category", "name slug")
       .populate("tags", "name");
@@ -211,18 +206,16 @@ export const getPostById = asyncHandler(async (req: Request, res: Response) => {
   res.status(200).json({ success: true, data: post });
 });
 
-// 5. Get All Posts
+// 5. Get All Posts (NO PAGINATION)
 export const getAllPosts = asyncHandler(async (req: Request, res: Response) => {
   const posts = await Post.find().sort({ createdAt: -1 }).populate("category tags");
+
   res.status(200).json({ success: true, count: posts.length, data: posts });
 });
 
-// 6. Search Posts
+// 6. Search Posts (NO PAGINATION)
 export const searchPosts = asyncHandler(async (req: Request, res: Response) => {
   const { query, categoryName } = req.query;
-  const page = parseInt(req.query.page as string) || 1;
-  const limit = parseInt(req.query.limit as string) || 10;
-  const skip = (page - 1) * limit;
 
   const searchFilter: any = {};
 
@@ -231,20 +224,18 @@ export const searchPosts = asyncHandler(async (req: Request, res: Response) => {
     const safeCat = escapeRegex(categoryName as string);
     const category = await Category.findOne({ name: { $regex: safeCat, $options: "i" } });
     if (category) searchFilter.category = category._id;
-    else return res.status(200).json({ success: true, data: [], pagination: { total: 0, page, limit, pages: 0 } });
+    else return res.status(200).json({ success: true, data: [] });
   }
 
   let postsQuery = Post.find(searchFilter);
   if (query) postsQuery = postsQuery.select({ score: { $meta: "textScore" } }).sort({ score: { $meta: "textScore" } });
   else postsQuery = postsQuery.sort({ createdAt: -1 });
 
-  const posts = await postsQuery.skip(skip).limit(limit).populate("category tags");
-  const total = await Post.countDocuments(searchFilter);
+  const posts = await postsQuery.populate("category tags");
 
   res.status(200).json({
     success: true,
     data: posts,
-    pagination: { total, page, limit, pages: Math.ceil(total / limit) },
   });
 });
 
@@ -312,12 +303,9 @@ export const getTrendingPosts = asyncHandler(async (req: Request, res: Response)
   res.status(200).json({ success: true, data: finalPosts });
 });
 
-// 8. Get Posts by Filter
+// 8. Get Posts by Filter (NO PAGINATION)
 export const getPostsByFilter = asyncHandler(async (req: Request, res: Response) => {
   const { id } = req.params;
-  const page = parseInt(req.query.page as string) || 1;
-  const limit = parseInt(req.query.limit as string) || 10;
-  const skip = (page - 1) * limit;
 
   let filter: any = {};
   let filterType = "all";
@@ -340,14 +328,12 @@ export const getPostsByFilter = asyncHandler(async (req: Request, res: Response)
     }
   }
 
-  const posts = await Post.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limit).populate("category tags");
-  const total = await Post.countDocuments(filter);
+  const posts = await Post.find(filter).sort({ createdAt: -1 }).populate("category tags");
 
   res.status(200).json({
     success: true,
     data: posts,
     meta: { filterType, filterName, filterId: id },
-    pagination: { total, page, limit, pages: Math.ceil(total / limit) },
   });
 });
 
