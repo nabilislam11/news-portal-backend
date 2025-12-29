@@ -20,7 +20,6 @@ bower_components/
 .env.production
 
 # Build output
-dist/
 build/
 tmp/
 

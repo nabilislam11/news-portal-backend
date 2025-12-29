@@ -2,11 +2,11 @@
 import dotenv from "dotenv";
 dotenv.config();
 
-// 2. Validate Env SECOND (Before importing app or db)
+// 2. Validate Env SECOND
 import { validateEnv } from "./utils/validateEnv";
 validateEnv();
 
-// 3. Now import the rest
+// 3. Imports
 import express from "express";
 import routers from "./routes/index";
 import { dbConnect } from "./configs/db.config";
@@ -16,18 +16,22 @@ import cookieParser from "cookie-parser";
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+// Note: Ensure this matches what your frontend calls (e.g., "api/v1")
 const BASE_URL = process.env.BASE_URL || "api/v1";
 
 (async () => {
   try {
-    // Crucial for Render: Allows Express to trust the HTTPS proxy
     app.set("trust proxy", 1);
 
     app.use(
       cors({
-        // Dynamic origin: Uses your ENV variable in production, falls back to localhost for dev
-        origin: process.env.CLIENT_URL || "http://localhost:5173",
+        origin: [
+          "https://protidinjonotarnews.com", // Your Main Domain
+          "https://www.protidinjonotarnews.com", // Your WWW Domain
+        ],
         credentials: true,
+        methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+        allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
       })
     );
 
@@ -35,22 +39,24 @@ const BASE_URL = process.env.BASE_URL || "api/v1";
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
 
-    app.use(routers);
+    // --- FIX: Ensure the Base URL is actually used ---
+    // If your router files don't already include "/api/v1", add it here:
+    app.use(`/${BASE_URL}`, routers);
+    // OR if your routers already have the prefix, just keep: app.use(routers);
 
     app.use(errorHandler);
 
-    // Connect to DB before listening
     await dbConnect();
 
     app.listen(PORT, () =>
       console.log(
         process.env.NODE_ENV === "development"
-          ? `✅ Server running - http://localhost:${PORT}${BASE_URL}`
+          ? `✅ Server running - http://localhost:${PORT}/${BASE_URL}`
           : "✅ Server running"
       )
     );
   } catch (error) {
     console.error("Something went wrong:", error);
-    process.exit(1); // Exit process on critical failure
+    process.exit(1);
   }
 })();
