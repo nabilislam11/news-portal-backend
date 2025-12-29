@@ -25,14 +25,8 @@ const BASE_URL = process.env.BASE_URL || "api/v1";
 
     app.use(
       cors({
-        origin: [
-          "https://protidinjonotarnews.com", // Your Main Domain
-          "https://www.protidinjonotarnews.com", // Your WWW Domain
-          "http://localhost:5173", // Your Localhost
-        ],
+        origin: "*",
         credentials: true,
-        methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-        allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
       })
     );
 
