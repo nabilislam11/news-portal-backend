@@ -28,6 +28,7 @@ const BASE_URL = process.env.BASE_URL || "api/v1";
         origin: [
           "https://protidinjonotarnews.com", // Your Main Domain
           "https://www.protidinjonotarnews.com", // Your WWW Domain
+          "http://localhost:5173", // Your Localhost
         ],
         credentials: true,
         methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
