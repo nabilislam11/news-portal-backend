@@ -4,7 +4,6 @@ import fs from "fs";
 import { Post } from "../models/postSchema";
 import { Tag } from "../models/tagSchema";
 import { PostView } from "../models/postViewSchema";
-// 👇 IMPORT THE MODEL
 import { BreakingNews } from "../models/breakingNewsSchema";
 import { uploadToCloudinary, deleteFromCloudinary } from "../utils/cloudinary";
 import { createError } from "../utils/createError";
@@ -19,26 +18,19 @@ interface CustomRequest extends Request {
 // INTERNAL HELPER: Add to Breaking News List
 // ==========================================
 const addToBreakingNewsList = async (postId: Types.ObjectId | string) => {
-  // 1. Find or Create the Singleton List
   let breaking = await BreakingNews.findOne();
   if (!breaking) {
     breaking = await BreakingNews.create({ posts: [] });
   }
 
-  // 2. Prepare IDs
   const currentList = breaking.posts.map((p) => p.toString());
   const newId = postId.toString();
 
-  // 3. Remove duplicate (if it's already there, we remove it so we can push it to the top)
   const filteredList = currentList.filter((id) => id !== newId);
-
-  // 4. Add to Top (Front of array)
   filteredList.unshift(newId);
 
-  // 5. Enforce Limit (Max 5)
   const finalList = filteredList.slice(0, 5);
 
-  // 6. Save
   breaking.posts = finalList as any;
   await breaking.save();
 };
@@ -94,7 +86,7 @@ const escapeRegex = (text: string) => {
 
 // 1. Create Post
 export const createPost = asyncHandler(async (req: CustomRequest, res: Response) => {
-  const { title, content, category, subCategory, tags, addToBreaking } = req.body;
+  const { title, content, category, tags, addToBreaking } = req.body;
   const file = getFile(req);
 
   if (!title || !content || !category) {
@@ -124,13 +116,12 @@ export const createPost = asyncHandler(async (req: CustomRequest, res: Response)
       content,
       image: imageData,
       category,
-      subCategory: subCategory === "null" || !subCategory ? null : subCategory,
+      // ❌ Removed subCategory logic here
       tags: tagIds,
     });
 
     await post.save();
 
-    // 👇 ADD TO BREAKING NEWS IF CHECKED
     if (addToBreaking === "true" || addToBreaking === true) {
       await addToBreakingNewsList(post._id as Types.ObjectId);
     }
@@ -145,7 +136,8 @@ export const createPost = asyncHandler(async (req: CustomRequest, res: Response)
 // 2. Update Post
 export const updatePost = asyncHandler(async (req: CustomRequest, res: Response) => {
   const { postId } = req.params;
-  const { title, content, category, subCategory, tags, addToBreaking } = req.body;
+  // ❌ Removed subCategory
+  const { title, content, category, tags, addToBreaking } = req.body;
   const file = getFile(req);
 
   const oldPost = await Post.findById(postId);
@@ -165,9 +157,9 @@ export const updatePost = asyncHandler(async (req: CustomRequest, res: Response)
     if (!categoryExists) throw createError("Invalid Category", 400);
     updateData.category = category;
   }
-  if (subCategory !== undefined) {
-    updateData.subCategory = subCategory === "null" || !subCategory ? null : subCategory;
-  }
+
+  // ❌ Removed the subCategory check block here
+
   if (tags) updateData.tags = await processTags(tags);
 
   let imageData = oldPost.image;
@@ -181,12 +173,11 @@ export const updatePost = asyncHandler(async (req: CustomRequest, res: Response)
       if (file) safeDelete(file.path);
     }
 
+    // ❌ Removed .populate("subCategory")
     const updatedPost = await Post.findByIdAndUpdate(postId, updateData, { new: true, runValidators: true })
       .populate("category", "name slug")
-      .populate("subCategory", "name slug")
       .populate("tags", "name");
 
-    // 👇 ADD TO BREAKING NEWS IF CHECKED
     if (addToBreaking === "true" || addToBreaking === true) {
       if (updatedPost) await addToBreakingNewsList(updatedPost._id as Types.ObjectId);
     }
@@ -360,7 +351,7 @@ export const getPostsByFilter = asyncHandler(async (req: Request, res: Response)
   });
 });
 
-// 👇 9. GET BREAKING NEWS (The New Controller for your Frontend Ticker)
+// 9. Get Breaking News
 export const getBreakingNews = asyncHandler(async (req: Request, res: Response) => {
   const breaking = await BreakingNews.findOne().populate("posts", "title slug image createdAt");
 
@@ -370,7 +361,7 @@ export const getBreakingNews = asyncHandler(async (req: Request, res: Response) 
   res.status(200).json({ success: true, data: breaking.posts });
 });
 
-// 👇 10. REMOVE FROM BREAKING NEWS (Manual Delete)
+// 10. Remove From Breaking News
 export const removeFromBreakingNews = asyncHandler(async (req: Request, res: Response) => {
   const { postId } = req.params;
 
@@ -380,11 +371,9 @@ export const removeFromBreakingNews = asyncHandler(async (req: Request, res: Res
     return res.status(404).json({ success: false, message: "Breaking news list not found" });
   }
 
-  // Filter out the ID you want to remove
   const originalLength = breaking.posts.length;
   breaking.posts = breaking.posts.filter((id) => id.toString() !== postId) as any;
 
-  // Save only if something actually changed
   if (breaking.posts.length !== originalLength) {
     await breaking.save();
   }
