@@ -25,7 +25,12 @@ const BASE_URL = process.env.BASE_URL || "api/v1";
 
     app.use(
       cors({
-        origin: "*",
+        origin: [
+          "https://protidinjonotarnews.com",
+          "https://www.protidinjonotarnews.com",
+          "http://localhost:5173",
+          "https://app.requestly.io",
+        ],
         credentials: true,
       })
     );
