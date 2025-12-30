@@ -1,6 +1,7 @@
 import express, { Router } from "express";
 import {
   changePassword,
+  getAdminSocials,
   getMe,
   login,
   logout,
@@ -22,6 +23,7 @@ authRoutes.post("/reset-password", resetPassword);
 authRoutes.delete("/logout", verifyAuthToken, logout);
 
 authRoutes.get("/me", verifyAuthToken, getMe);
+authRoutes.get("/public-socials", getAdminSocials);
 authRoutes.put("/socials", verifyAuthToken, updateSocialLinks);
 authRoutes.put("/change-password", verifyAuthToken, changePassword);
 

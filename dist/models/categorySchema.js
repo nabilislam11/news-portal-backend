@@ -53,12 +53,6 @@ const categorySchema = new mongoose_1.Schema({
         trim: true,
         maxlength: [200, "Description cannot exceed 200 characters"],
     },
-    subCategories: [
-        {
-            type: mongoose_1.Schema.Types.ObjectId,
-            ref: "SubCategory",
-        },
-    ],
     isActive: {
         type: Boolean,
         default: true,

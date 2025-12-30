@@ -7,7 +7,7 @@ exports.adminLimiter = exports.searchLimiter = exports.otpRateLimiter = exports.
 const express_rate_limit_1 = __importDefault(require("express-rate-limit"));
 exports.apiLimiter = (0, express_rate_limit_1.default)({
     windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 200,
+    max: 500,
     message: {
         success: false,
         message: "Too many requests from this IP, please try again after 15 minutes",

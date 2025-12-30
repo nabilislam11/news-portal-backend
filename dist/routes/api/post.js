@@ -13,14 +13,19 @@ const postRoutes = express_1.default.Router();
 // ==========================================
 // PUBLIC ROUTES
 // ==========================================
-// 1. Search & Trending (MUST be defined before /:postId)
 postRoutes.get("/search", rateLimiter_1.searchLimiter, postController_1.searchPosts);
 postRoutes.get("/trending", postController_1.getTrendingPosts);
+postRoutes.get("/breaking", postController_1.getBreakingNews);
 postRoutes.get("/", postController_1.getAllPosts);
-postRoutes.get("/:postId", viewCountMiddleware_1.trackPostView, postController_1.getPostById);
 postRoutes.get("/filter/:id", postController_1.getPostsByFilter);
-// Create: Accept any field name. Middleware blocks non-images.
+postRoutes.get("/:postId", viewCountMiddleware_1.trackPostView, postController_1.getPostById);
+// ==========================================
+// PROTECTED ROUTES (Admin Only)
+// ==========================================
 postRoutes.post("/", authMiddleware_1.verifyAuthToken, uploadMiddleware_1.default.any(), postController_1.createPost);
 postRoutes.put("/:postId", authMiddleware_1.verifyAuthToken, uploadMiddleware_1.default.any(), postController_1.updatePost);
+// 👇 NEW ROUTE: Remove from Breaking News (Must be BEFORE generic delete)
+postRoutes.delete("/breaking/:postId", authMiddleware_1.verifyAuthToken, postController_1.removeFromBreakingNews);
+// Generic Delete Post
 postRoutes.delete("/:postId", authMiddleware_1.verifyAuthToken, postController_1.deletePost);
 exports.default = postRoutes;

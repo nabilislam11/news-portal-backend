@@ -80,11 +80,6 @@ const postSchema = new mongoose_1.Schema({
         default: 0,
         min: 0,
     },
-    isFavourite: {
-        type: Boolean,
-        default: false,
-        index: true,
-    },
 }, {
     timestamps: true,
     toJSON: {

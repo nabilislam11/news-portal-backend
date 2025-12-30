@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from "express"; // Removed NextFunction
+import { Request, Response } from "express";
 import Admin from "../models/adminSchema";
 import { createError } from "../utils/createError";
 import jwt from "jsonwebtoken";
@@ -247,6 +247,7 @@ export const logout = (req: Request, res: Response) => {
 
 // ------------------ PROFILE --------------------------------
 
+// 6. GET ME
 export const getMe = asyncHandler(async (req: Request, res: Response) => {
   // 👇 FIX: Tell browser "Never remember this response"
   res.set("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
@@ -340,5 +341,26 @@ export const updateUsername = asyncHandler(async (req: Request, res: Response) =
     success: true,
     message: "Username updated successfully",
     data: { username: admin.username },
+  });
+});
+
+// 10. GET PUBLIC SOCIAL LINKS (No Auth Required)
+// ==========================================
+export const getAdminSocials = asyncHandler(async (req: Request, res: Response) => {
+  // We use findOne() to get the first admin document found.
+  // Since this is a single-admin news portal, this correctly fetches the main admin's data.
+  const admin = await Admin.findOne().select("socialLinks");
+
+  if (!admin) {
+    // If no admin exists yet, return null instead of error to keep frontend safe
+    return res.status(200).json({
+      success: true,
+      data: { socialLinks: null },
+    });
+  }
+
+  res.status(200).json({
+    success: true,
+    data: { socialLinks: admin.socialLinks },
   });
 });

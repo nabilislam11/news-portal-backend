@@ -42,11 +42,6 @@ const createError_1 = require("../utils/createError");
 const adminSchema_1 = __importDefault(require("../models/adminSchema")); // <--- Import Admin Model
 const verifyAuthToken = async (req, res, next) => {
     try {
-        // 2. Runtime Safety Check
-        if (!process.env.JWT_SECRET) {
-            console.error("FATAL ERROR: JWT_SECRET is not defined in .env");
-            return next((0, createError_1.createError)("Internal Server Error: Auth Config Missing", 500));
-        }
         const token = req.cookies?.accessToken || req.headers.authorization?.split(" ")[1];
         if (!token) {
             return next((0, createError_1.createError)("Not authorized. Please login.", 401));

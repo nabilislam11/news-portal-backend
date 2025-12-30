@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateUsername = exports.changePassword = exports.updateSocialLinks = exports.getMe = exports.logout = exports.resetPassword = exports.verifyOTP = exports.requestVerification = exports.login = void 0;
+exports.getAdminSocials = exports.updateUsername = exports.changePassword = exports.updateSocialLinks = exports.getMe = exports.logout = exports.resetPassword = exports.verifyOTP = exports.requestVerification = exports.login = void 0;
 const adminSchema_1 = __importDefault(require("../models/adminSchema"));
 const createError_1 = require("../utils/createError");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
@@ -36,7 +36,7 @@ exports.login = (0, asyncHandler_1.asyncHandler)(async (req, res) => {
     res.cookie("accessToken", accessToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
+        sameSite: "none",
         maxAge: 365 * 24 * 60 * 60 * 1000, // 1 year
     });
     res.status(200).json({
@@ -185,12 +185,14 @@ exports.resetPassword = (0, asyncHandler_1.asyncHandler)(async (req, res) => {
 });
 // 5. LOGOUT
 const logout = (req, res) => {
+    // Option 1: Clear with your specific settings (The standard way)
     res.clearCookie("accessToken", {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
+        secure: true,
+        sameSite: "none",
         path: "/",
     });
+    res.clearCookie("accessToken");
     res.status(200).json({
         success: true,
         message: "Logged out successfully",
@@ -198,8 +200,14 @@ const logout = (req, res) => {
 };
 exports.logout = logout;
 // ------------------ PROFILE --------------------------------
+// 6. GET ME
 exports.getMe = (0, asyncHandler_1.asyncHandler)(async (req, res) => {
+    // 👇 FIX: Tell browser "Never remember this response"
+    res.set("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
+    res.set("Pragma", "no-cache");
+    res.set("Expires", "0");
     const admin = await adminSchema_1.default.findById(req.admin?.id);
+    // If the middleware passed, but the ID doesn't exist in DB anymore
     if (!admin)
         throw (0, createError_1.createError)("Admin account not found", 404);
     res.status(200).json({ success: true, data: admin });
@@ -274,5 +282,23 @@ exports.updateUsername = (0, asyncHandler_1.asyncHandler)(async (req, res) => {
         success: true,
         message: "Username updated successfully",
         data: { username: admin.username },
+    });
+});
+// 10. GET PUBLIC SOCIAL LINKS (No Auth Required)
+// ==========================================
+exports.getAdminSocials = (0, asyncHandler_1.asyncHandler)(async (req, res) => {
+    // We use findOne() to get the first admin document found.
+    // Since this is a single-admin news portal, this correctly fetches the main admin's data.
+    const admin = await adminSchema_1.default.findOne().select("socialLinks");
+    if (!admin) {
+        // If no admin exists yet, return null instead of error to keep frontend safe
+        return res.status(200).json({
+            success: true,
+            data: { socialLinks: null },
+        });
+    }
+    res.status(200).json({
+        success: true,
+        data: { socialLinks: admin.socialLinks },
     });
 });

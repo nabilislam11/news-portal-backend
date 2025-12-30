@@ -14,6 +14,7 @@ authRoutes.post("/verify-otp", rateLimiter_1.otpRateLimiter, adminAuthController
 authRoutes.post("/reset-password", adminAuthController_1.resetPassword);
 authRoutes.delete("/logout", authMiddleware_1.verifyAuthToken, adminAuthController_1.logout);
 authRoutes.get("/me", authMiddleware_1.verifyAuthToken, adminAuthController_1.getMe);
+authRoutes.get("/public-socials", adminAuthController_1.getAdminSocials);
 authRoutes.put("/socials", authMiddleware_1.verifyAuthToken, adminAuthController_1.updateSocialLinks);
 authRoutes.put("/change-password", authMiddleware_1.verifyAuthToken, adminAuthController_1.changePassword);
 exports.default = authRoutes;
