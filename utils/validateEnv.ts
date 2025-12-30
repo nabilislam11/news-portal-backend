@@ -10,7 +10,6 @@ export const validateEnv = () => {
     "CLOUDINARY_API_SECRET",
     "ADMIN_EMAIL",
     "APP_NAME",
-    "PORT",
   ];
 
   const missingKeys: string[] = [];
