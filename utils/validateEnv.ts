@@ -12,7 +12,6 @@ export const validateEnv = () => {
     "APP_NAME",
     "BASE_URL",
     "PORT",
-    "CLIENT_URL",
   ];
 
   const missingKeys: string[] = [];
