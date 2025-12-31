@@ -13,6 +13,7 @@ export interface IAdmin extends Document {
     linkedin?: string;
     instagram?: string;
     youtube?: string;
+    tiktok?: string;
   };
 
   // OTP fields
@@ -58,6 +59,7 @@ const adminSchema = new Schema<IAdmin>(
       linkedin: { type: String, trim: true, default: "" },
       instagram: { type: String, trim: true, default: "" },
       youtube: { type: String, trim: true, default: "" },
+      tiktok: { type: String, trim: true, default: "" },
     },
 
     // OTP fields

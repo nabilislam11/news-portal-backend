@@ -265,14 +265,14 @@ export const getMe = asyncHandler(async (req: Request, res: Response) => {
 // 7. UPDATE SOCIAL LINKS (Authenticated)
 // ==========================================
 export const updateSocialLinks = asyncHandler(async (req: Request, res: Response) => {
-  const { facebook, twitter, linkedin, instagram, youtube } = req.body;
+  const { facebook, twitter, linkedin, instagram, youtube, tiktok } = req.body;
 
   const admin = await Admin.findById(req.admin?.id);
   if (!admin) throw createError("Admin not found", 404);
 
   // Initialize if missing
   if (!admin.socialLinks) {
-    admin.socialLinks = { facebook: "", twitter: "", linkedin: "", instagram: "", youtube: "" };
+    admin.socialLinks = { facebook: "", twitter: "", linkedin: "", instagram: "", youtube: "", tiktok: "" };
   }
 
   // Update provided fields
@@ -281,6 +281,7 @@ export const updateSocialLinks = asyncHandler(async (req: Request, res: Response
   if (linkedin !== undefined) admin.socialLinks.linkedin = linkedin;
   if (instagram !== undefined) admin.socialLinks.instagram = instagram;
   if (youtube !== undefined) admin.socialLinks.youtube = youtube;
+  if (tiktok !== undefined) admin.socialLinks.tiktok = tiktok;
 
   // IMPORTANT: Mark modified for nested objects
   admin.markModified("socialLinks");
