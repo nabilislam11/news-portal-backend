@@ -9,3 +9,4 @@ cloudinary_1.v2.config({
     secure: true, // Force HTTPS
 });
 exports.default = cloudinary_1.v2;
+//# sourceMappingURL=cloudinary.config.js.map

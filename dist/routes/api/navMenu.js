@@ -6,3 +6,4 @@ const authMiddleware_1 = require("../../middleware/authMiddleware");
 const router = (0, express_1.Router)();
 router.route("/").get(navMenuController_1.getNavMenu).put(authMiddleware_1.verifyAuthToken, navMenuController_1.updateNavMenu);
 exports.default = router;
+//# sourceMappingURL=navMenu.js.map

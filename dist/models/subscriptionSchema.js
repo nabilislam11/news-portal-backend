@@ -54,3 +54,4 @@ const subscriptionSchema = new mongoose_1.Schema({
     },
 });
 exports.Subscription = mongoose_1.default.model("Subscription", subscriptionSchema);
+//# sourceMappingURL=subscriptionSchema.js.map

@@ -44,3 +44,4 @@ async function sendEmail(to, type, data) {
         throw new Error("Failed to send email. Please try again later.");
     }
 }
+//# sourceMappingURL=sendEmail.js.map

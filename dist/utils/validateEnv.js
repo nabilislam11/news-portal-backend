@@ -5,7 +5,7 @@ const validateEnv = () => {
     // List all the variables you absolutely NEED
     const requiredEnv = [
         "NODE_ENV",
-        "DB_URL",
+        "MONGODB_URI",
         "JWT_SECRET",
         "RESEND_API_KEY",
         "CLOUDINARY_CLOUD_NAME",
@@ -13,7 +13,6 @@ const validateEnv = () => {
         "CLOUDINARY_API_SECRET",
         "ADMIN_EMAIL",
         "APP_NAME",
-        "PORT",
     ];
     const missingKeys = [];
     // Check each one
@@ -32,3 +31,4 @@ const validateEnv = () => {
     console.log("✅ Environment variables validated successfully.");
 };
 exports.validateEnv = validateEnv;
+//# sourceMappingURL=validateEnv.js.map

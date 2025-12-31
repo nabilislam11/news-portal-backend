@@ -149,3 +149,4 @@ exports.toggleAdStatus = (0, asyncHandler_1.asyncHandler)(async (req, res) => {
     await ad.save();
     res.status(200).json({ success: true, message: "Ad status updated", data: ad });
 });
+//# sourceMappingURL=adController.js.map

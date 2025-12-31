@@ -45,7 +45,7 @@ const PORT = process.env.PORT || 5000;
         // ✅ FIXED: Hardcoded to "/api/v1" (No more Base URL variable issues)
         app.use("/api/v1", index_1.default);
         // ✅ DEBUG ROUTE
-        app.get("/api/v1/hello", (req, res) => {
+        app.get("/api/v1/hello", (_req, res) => {
             res.status(200).send("yes its live");
         });
         app.use(errorHandler_1.errorHandler);
@@ -61,3 +61,4 @@ const PORT = process.env.PORT || 5000;
         console.error("❌ Critical Startup Error:", error);
     }
 })();
+//# sourceMappingURL=index.js.map

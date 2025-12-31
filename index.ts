@@ -49,7 +49,7 @@ const PORT = process.env.PORT || 5000;
     app.use("/api/v1", routers);
 
     // ✅ DEBUG ROUTE
-    app.get("/api/v1/hello", (req: Request, res: Response) => {
+    app.get("/api/v1/hello", (_req: Request, res: Response) => {
       res.status(200).send("yes its live");
     });
 

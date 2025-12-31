@@ -24,3 +24,4 @@ router.use("/ad", ad_1.default);
 router.use("/subscription", subscription_1.default);
 router.use("/dashboard", dashboard_1.default);
 exports.default = router;
+//# sourceMappingURL=index.js.map

@@ -94,3 +94,4 @@ postSchema.index({ createdAt: -1 });
 // IMPORTANT: Kept the Text Index for your Search Controller
 postSchema.index({ title: "text", content: "text" });
 exports.Post = mongoose_1.default.model("Post", postSchema);
+//# sourceMappingURL=postSchema.js.map

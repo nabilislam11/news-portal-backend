@@ -10,3 +10,4 @@ const dashboardRoutes = express_1.default.Router();
 // Protected: Only Admin can see the dashboard stats
 dashboardRoutes.get("/stats", authMiddleware_1.verifyAuthToken, dashboardController_1.getDashboardStats);
 exports.default = dashboardRoutes;
+//# sourceMappingURL=dashboard.js.map

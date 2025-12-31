@@ -10,3 +10,4 @@ const asyncHandler = (fn) => async (req, res, next) => {
     }
 };
 exports.asyncHandler = asyncHandler;
+//# sourceMappingURL=asyncHandler.js.map

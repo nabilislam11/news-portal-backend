@@ -68,3 +68,4 @@ const trackPostView = (req, res, next) => {
     })();
 };
 exports.trackPostView = trackPostView;
+//# sourceMappingURL=viewCountMiddleware.js.map

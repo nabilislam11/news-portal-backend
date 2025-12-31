@@ -75,3 +75,4 @@ const adSchema = new mongoose_1.Schema({
     },
 });
 exports.Ad = mongoose_1.default.model("Ad", adSchema);
+//# sourceMappingURL=adSchema.js.map

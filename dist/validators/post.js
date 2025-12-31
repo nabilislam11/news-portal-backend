@@ -13,3 +13,4 @@ exports.postSchema = zod_1.z.object({
     isDraft: zod_1.z.boolean().optional(),
     views: zod_1.z.number().optional(),
 });
+//# sourceMappingURL=post.js.map

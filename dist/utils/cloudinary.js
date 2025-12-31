@@ -59,3 +59,4 @@ const deleteFromCloudinary = async (publicId) => {
     }
 };
 exports.deleteFromCloudinary = deleteFromCloudinary;
+//# sourceMappingURL=cloudinary.js.map

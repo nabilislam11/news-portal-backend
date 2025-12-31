@@ -17,3 +17,4 @@ categoryRoutes.put("/:id", authMiddleware_1.verifyAuthToken, categoryController_
 categoryRoutes.patch("/:id/toggle", authMiddleware_1.verifyAuthToken, categoryController_1.toggleCategoryStatus);
 categoryRoutes.delete("/:id", authMiddleware_1.verifyAuthToken, categoryController_1.deleteCategory);
 exports.default = categoryRoutes;
+//# sourceMappingURL=category.js.map

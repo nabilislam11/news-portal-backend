@@ -2,7 +2,7 @@ export const validateEnv = () => {
   // List all the variables you absolutely NEED
   const requiredEnv = [
     "NODE_ENV",
-    "DB_URL",
+    "MONGODB_URI",
     "JWT_SECRET",
     "RESEND_API_KEY",
     "CLOUDINARY_CLOUD_NAME",

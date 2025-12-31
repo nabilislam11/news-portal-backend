@@ -60,3 +60,4 @@ postViewSchema.index({ createdAt: -1 });
 // 3. Auto-Delete Logs after 7 days
 postViewSchema.index({ createdAt: 1 }, { expireAfterSeconds: 7 * 24 * 60 * 60 });
 exports.PostView = mongoose_1.default.model("PostView", postViewSchema);
+//# sourceMappingURL=postViewSchema.js.map

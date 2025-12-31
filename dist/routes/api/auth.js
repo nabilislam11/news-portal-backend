@@ -18,3 +18,4 @@ authRoutes.get("/public-socials", adminAuthController_1.getAdminSocials);
 authRoutes.put("/socials", authMiddleware_1.verifyAuthToken, adminAuthController_1.updateSocialLinks);
 authRoutes.put("/change-password", authMiddleware_1.verifyAuthToken, adminAuthController_1.changePassword);
 exports.default = authRoutes;
+//# sourceMappingURL=auth.js.map

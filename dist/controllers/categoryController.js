@@ -95,3 +95,4 @@ exports.deleteCategory = (0, asyncHandler_1.asyncHandler)(async (req, res) => {
     await categorySchema_1.default.findByIdAndDelete(id);
     res.status(200).json({ success: true, message: "Category deleted successfully" });
 });
+//# sourceMappingURL=categoryController.js.map

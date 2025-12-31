@@ -9,9 +9,9 @@ const adminSchema_1 = __importDefault(require("../models/adminSchema"));
 dotenv_1.default.config();
 const seedSuperAdmin = async () => {
     try {
-        const dbUrl = process.env.DB_URL;
+        const dbUrl = process.env.MONGODB_URI;
         if (!dbUrl) {
-            console.error("❌ Error: DB_URL is missing in .env file");
+            console.error("❌ Error: MONGODB_URI is missing in .env file");
             process.exit(1);
         }
         await mongoose_1.default.connect(dbUrl);
@@ -44,3 +44,4 @@ const seedSuperAdmin = async () => {
     }
 };
 seedSuperAdmin();
+//# sourceMappingURL=seed.js.map

@@ -55,3 +55,4 @@ const tagSchema = new mongoose_1.Schema({
     },
 });
 exports.Tag = mongoose_1.default.model("Tag", tagSchema);
+//# sourceMappingURL=tagSchema.js.map

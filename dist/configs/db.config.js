@@ -6,9 +6,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.dbConnect = void 0;
 const mongoose_1 = __importDefault(require("mongoose"));
 const dbConnect = async () => {
-    const mongoUri = process.env.DB_URL;
+    const mongoUri = process.env.MONGODB_URI;
     if (!mongoUri) {
-        console.error("FATAL ERROR: DB_URL is not defined in .env");
+        console.error("FATAL ERROR:MONGODB_URI is not defined in .env");
         process.exit(1);
     }
     try {
@@ -25,3 +25,4 @@ const dbConnect = async () => {
     }
 };
 exports.dbConnect = dbConnect;
+//# sourceMappingURL=db.config.js.map

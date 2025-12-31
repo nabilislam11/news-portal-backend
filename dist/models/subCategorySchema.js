@@ -85,3 +85,4 @@ subCategorySchema.pre("save", function (next) {
 subCategorySchema.index({ slug: 1, category: 1 }, { unique: true });
 const SubCategory = mongoose_1.default.model("SubCategory", subCategorySchema);
 exports.default = SubCategory;
+//# sourceMappingURL=subCategorySchema.js.map

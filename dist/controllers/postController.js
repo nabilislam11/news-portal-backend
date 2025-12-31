@@ -344,3 +344,4 @@ exports.removeFromBreakingNews = (0, asyncHandler_1.asyncHandler)(async (req, re
     }
     res.status(200).json({ success: true, message: "Removed from Breaking News", data: breaking.posts });
 });
+//# sourceMappingURL=postController.js.map

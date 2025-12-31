@@ -81,3 +81,4 @@ const verificationEmailTemplate = (otp) => `
 
   `;
 exports.verificationEmailTemplate = verificationEmailTemplate;
+//# sourceMappingURL=verificationEmail.js.map

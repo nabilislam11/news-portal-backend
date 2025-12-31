@@ -6,3 +6,4 @@ function createError(message, statusCode = 500) {
     error.statusCode = statusCode;
     return error;
 }
+//# sourceMappingURL=createError.js.map

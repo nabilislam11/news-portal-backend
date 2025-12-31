@@ -68,3 +68,4 @@ exports.getDashboardStats = (0, asyncHandler_1.asyncHandler)(async (req, res) =>
         },
     });
 });
+//# sourceMappingURL=dashboardController.js.map

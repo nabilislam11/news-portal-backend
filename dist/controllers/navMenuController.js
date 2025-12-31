@@ -31,3 +31,4 @@ exports.updateNavMenu = (0, asyncHandler_1.asyncHandler)(async (req, res) => {
     const menu = await navMenu_1.NavMenu.findOneAndUpdate({}, { categoryIds }, { new: true, upsert: true, runValidators: true }).populate("categoryIds", "name slug");
     res.status(200).json(menu.categoryIds);
 });
+//# sourceMappingURL=navMenuController.js.map

@@ -58,3 +58,4 @@ exports.adminLimiter = (0, express_rate_limit_1.default)({
         message: "Too many admin operations. Please slow down.",
     },
 });
+//# sourceMappingURL=rateLimiter.js.map

@@ -9,3 +9,4 @@
 // // URL: GET /api/tags/posts?tagName=politics&page=1
 // tagRoutes.get("/posts", getPostsByTag);
 // export default tagRoutes;
+//# sourceMappingURL=tag.js.map

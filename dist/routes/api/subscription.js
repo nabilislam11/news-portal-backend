@@ -13,3 +13,4 @@ subscriptionRoutes.post("/", subscriptionController_1.subscribe);
 subscriptionRoutes.get("/", authMiddleware_1.verifyAuthToken, subscriptionController_1.getAllSubscriptions);
 subscriptionRoutes.delete("/:id", authMiddleware_1.verifyAuthToken, subscriptionController_1.deleteSubscription);
 exports.default = subscriptionRoutes;
+//# sourceMappingURL=subscription.js.map

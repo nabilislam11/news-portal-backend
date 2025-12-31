@@ -74,3 +74,4 @@ categorySchema.pre("save", function (next) {
 });
 const Category = mongoose_1.default.model("Category", categorySchema);
 exports.default = Category;
+//# sourceMappingURL=categorySchema.js.map

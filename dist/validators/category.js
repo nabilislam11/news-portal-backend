@@ -7,3 +7,4 @@ exports.categorySchema = zod_1.z.object({
     name: zod_1.z.string().min(2, "Name must be at least 2 characters"),
     description: zod_1.z.string().optional(),
 });
+//# sourceMappingURL=category.js.map

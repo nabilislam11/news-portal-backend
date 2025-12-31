@@ -23,3 +23,4 @@ const navMenuSchema = new mongoose_1.Schema({
     },
 });
 exports.NavMenu = (0, mongoose_1.model)("NavMenu", navMenuSchema);
+//# sourceMappingURL=navMenu.js.map

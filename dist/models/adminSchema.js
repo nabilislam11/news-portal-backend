@@ -127,3 +127,4 @@ adminSchema.methods.compareField = async function (field, value) {
 };
 const Admin = mongoose_1.default.model("Admin", adminSchema);
 exports.default = Admin;
+//# sourceMappingURL=adminSchema.js.map

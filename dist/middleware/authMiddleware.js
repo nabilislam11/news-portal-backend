@@ -76,3 +76,4 @@ const verifyAuthToken = async (req, res, next) => {
     }
 };
 exports.verifyAuthToken = verifyAuthToken;
+//# sourceMappingURL=authMiddleware.js.map

@@ -58,3 +58,4 @@ exports.deleteSubscription = (0, asyncHandler_1.asyncHandler)(async (req, res) =
         message: "Email removed from list",
     });
 });
+//# sourceMappingURL=subscriptionController.js.map

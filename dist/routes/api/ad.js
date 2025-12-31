@@ -16,3 +16,4 @@ adRoutes.put("/:id", authMiddleware_1.verifyAuthToken, uploadMiddleware_1.defaul
 adRoutes.patch("/:id/toggle", authMiddleware_1.verifyAuthToken, adController_1.toggleAdStatus);
 adRoutes.delete("/:id", authMiddleware_1.verifyAuthToken, adController_1.deleteAd);
 exports.default = adRoutes;
+//# sourceMappingURL=ad.js.map

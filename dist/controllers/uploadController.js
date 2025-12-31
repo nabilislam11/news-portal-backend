@@ -21,3 +21,4 @@ exports.uploadImage = (0, asyncHandler_1.asyncHandler)(async (req, res) => {
         data: result,
     });
 });
+//# sourceMappingURL=uploadController.js.map

@@ -21,3 +21,4 @@ subCategoryRoutes.delete("/:id", verifyAuthToken, deleteSubCategory);
 
 export default subCategoryRoutes;
 */
+//# sourceMappingURL=subcategory.js.map

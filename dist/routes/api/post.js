@@ -29,3 +29,4 @@ postRoutes.delete("/breaking/:postId", authMiddleware_1.verifyAuthToken, postCon
 // Generic Delete Post
 postRoutes.delete("/:postId", authMiddleware_1.verifyAuthToken, postController_1.deletePost);
 exports.default = postRoutes;
+//# sourceMappingURL=post.js.map
